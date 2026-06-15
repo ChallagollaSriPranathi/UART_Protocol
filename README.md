@@ -1,6 +1,4 @@
-Here’s the **entire corrected document for 9600 baud @ 50 MHz**, ready for you to copy:
 
-```
 <div align="center">
 
 # UART Protocol — RTL Design & Verification
