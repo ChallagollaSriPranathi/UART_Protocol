@@ -21,12 +21,10 @@
 2. [Architecture](#-architecture)
 3. [FSM Diagrams](#-fsm-diagrams)
 4. [Modules](#-modules)
-5. [Signal Reference](#-signal-reference)
-6. [Repository Structure](#-repository-structure)
-7. [Setup & Simulation](#-setup--simulation)
-8. [Simulation Results](#-simulation-results)
-9. [Future Enhancements](#-future-enhancements)
-10. [Author](#-author)
+5. [Repository Structure](#-repository-structure)
+6. [Setup & Simulation](#-setup--simulation)
+7. [Simulation Results](#-simulation-results)
+8. [Author](#-author)
 
 ---
 
@@ -220,23 +218,6 @@ end
 
 ---
 
-## 📡 Signal Reference
-
-### `uart_top` Port Map
-
-| Signal | Dir | Width | Active | Description |
-|--------|-----|-------|--------|-------------|
-| `clk` | In | 1 | Rising edge | 50 MHz system clock |
-| `rst` | In | 1 | High (sync) | Resets all FSMs and registers |
-| `data_in` | In | 8 | — | Byte to transmit |
-| `wr_en` | In | 1 | High pulse (1 cycle) | Starts a UART frame |
-| `rdy_clr` | In | 1 | High pulse (1 cycle) | Clears `rdy` after reading |
-| `busy` | Out | 1 | High | TX is not in IDLE (combinational) |
-| `rdy` | Out | 1 | High | Valid byte in `data_out` (registered) |
-| `data_out` | Out | 8 | — | Received byte, valid while `rdy=1` |
-
----
-
 ## 📁 Repository Structure
 
 ```
@@ -327,13 +308,12 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 | Bytes received correctly | 101 |
 | Mismatches | ✅ 0 |
 | Framing errors | ✅ 0 |
-| Simulation time | ~9 ms (@ 100 MHz TB clock) |
 
 ---
 
 ## 👩‍💻 Author
 
-<div align="center">
+<div align="right">
 
 **Challagolla Sri Pranathi**
 
