@@ -320,7 +320,7 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 | Bytes received correctly | 101 |
 | Mismatches | ✅ 0 |
 | Framing errors | ✅ 0 |
-|Simulation time : ~105 ms (@ 100 MHz TB clock)|
+|Simulation time | ~105 ms (@ 100 MHz TB clock)|
 ---
 
 ## 👩‍💻 Author
