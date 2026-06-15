@@ -1,0 +1,46 @@
+
+module uart_top (
+    input  wire       clk,
+    input  wire       rst,
+    input  wire [7:0] data_in,
+    input  wire       wr_en,
+    input  wire       rdy_clr,
+    output wire       rdy,
+    output wire       busy,
+    output wire [7:0] data_out
+);
+
+    wire tx_clk_en;
+    wire rx_clk_en;
+    wire tx_line;
+
+    baudrate_gen #(
+        .CLK_FREQ(50_000_000),   
+        .BAUD_RATE(115200)         
+    ) bg (
+        .clock(clk),
+        .reset(rst),
+        .enb_tx(tx_clk_en),
+        .enb_rx(rx_clk_en)
+    );
+
+    uart_transmitter us (
+        .clk(clk),
+        .wr_enb(wr_en),
+        .rst(rst),
+        .data_in(data_in),
+        .enb(tx_clk_en),
+        .tx(tx_line),
+        .busy(busy)
+    );
+
+    uart_receiver ur (
+        .clk(clk),
+        .rst(rst),
+        .rx(tx_line),        
+        .rdy_clr(rdy_clr),
+        .clk_en(rx_clk_en),
+        .rdy(rdy),
+        .data_out(data_out)
+    );
+endmodule
