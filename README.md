@@ -153,7 +153,7 @@ reg [$clog2(DIV_TX)-1:0] counter_tx;  // 13-bit, self-sizing
 reg [$clog2(DIV_RX)-1:0] counter_rx;  // 10-bit, self-sizing
 ```
 
-**Parameters:** `CLK_FREQ` (default 100 MHz), `BAUD_RATE` (default 115200)
+**Parameters:** `CLK_FREQ` (default 100 MHz), `BAUD_RATE` (default 9600)
 
 ---
 
