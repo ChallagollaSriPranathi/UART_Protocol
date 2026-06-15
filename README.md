@@ -2,14 +2,12 @@
 
 # 🔌 UART Protocol — RTL Design & Verification
 
-### Full-Stack Serial Communication Controller in Synthesizable Verilog HDL
+### Universal Asynchronous Receiver and Transmitter
 
 [![Language](https://img.shields.io/badge/HDL-Verilog%20IEEE%201364--2005-1f6feb?style=for-the-badge&logo=v&logoColor=white)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 [![Tool](https://img.shields.io/badge/EDA-Xilinx%20Vivado-ff6600?style=for-the-badge)](https://www.xilinx.com/products/design-tools/vivado.html)
-[![Baud Rate](https://img.shields.io/badge/Baud%20Rate-115200%20bps-brightgreen?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 [![Clock](https://img.shields.io/badge/System%20Clock-50%20MHz-blue?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 [![Verified](https://img.shields.io/badge/Verified-101%20Bytes%20Loopback-success?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
-[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)](LICENSE)
 
 > A complete UART controller built from scratch in Verilog HDL — dual FSMs, 16× oversampling, parametric baud generation, and a self-checking 101-byte loopback testbench. Zero mismatches.
 
@@ -34,7 +32,7 @@
 
 ## 🔍 Project Overview
 
-This repository implements a **complete, industry-style UART controller** from the ground up in Verilog HDL — every layer hand-crafted, from baud clock division to FSM encoding to testbench verification.
+This repository implements a **UART controller** from the ground up in Verilog HDL —  from baud clock division to FSM encoding to testbench verification.
 
 | Feature | Detail |
 |---------|--------|
