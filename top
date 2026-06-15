@@ -16,7 +16,7 @@ module uart_top (
 
     baudrate_gen #(
         .CLK_FREQ(50_000_000),   
-        .BAUD_RATE(115200)         
+        .BAUD_RATE(9600)         
     ) bg (
         .clock(clk),
         .reset(rst),
