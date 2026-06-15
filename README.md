@@ -78,7 +78,7 @@ This repository implements a **UART controller** from the ground up in Verilog H
                               └──────────────────────────────────────────┘
 ```
 
-![Schematic](Schematic.png.png)
+![Schematic](Schematic.png)
 
 ---
 
@@ -304,8 +304,8 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 
 ### Waveforms
 
-![Simulation Waveform 1](Simulation1.png.png)
-![Simulation Waveform 2](Simulation2.png.png)
+![Simulation Waveform 1](Simulation1.png)
+![Simulation Waveform 2](Simulation2.png)
 
 **TCL Console — Self-Check Output**
 
