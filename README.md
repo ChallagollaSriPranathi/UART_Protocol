@@ -1,43 +1,42 @@
+Here’s the **entire corrected document for 9600 baud @ 50 MHz**, ready for you to copy:
 
 ```
 <div align="center">
 
 # UART Protocol — RTL Design & Verification
 
-### Full-Stack Serial Communication Controller in Synthesizable Verilog HDL
+### Universal Asynchronous Receiver and Transmitter
 
-[![Language](https://img.shields.io/badge/HDL-Verilog%20IEEE%201364--2005-1f6feb?style=for-the-badge&logo=v&logoColor=white)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
+[![Language](https://img.shields.io/badge/HDL-Verilog%20IEEE%201364--2005-1f6feb?style=for-the-badge&logo=v&logoColor=white)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 [![Tool](https://img.shields.io/badge/EDA-Xilinx%20Vivado-ff6600?style=for-the-badge)](https://www.xilinx.com/products/design-tools/vivado.html)
-[![Baud Rate](https://img.shields.io/badge/Baud%20Rate-9600%20bps-brightgreen?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
-[![Clock](https://img.shields.io/badge/System%20Clock-50%20MHz-blue?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
-[![Verified](https://img.shields.io/badge/Verification-101%20Bytes%20Loopback-success?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
+[![Baud Rate](https://img.shields.io/badge/Baud%20Rate-9600%20bps-brightgreen?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
+[![Clock](https://img.shields.io/badge/System%20Clock-50%20MHz-blue?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
+[![Verified](https://img.shields.io/badge/Verification-101%20Bytes%20Loopback-success?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)](LICENSE)
 
 <br/>
 
-> **A from-scratch, fully-parametric RTL implementation of the UART serial protocol** — featuring dual independent FSMs, a 16× oversampling receiver, synthesizable baud rate generation using `$clog2()`, and a self-checking testbench that verifies 101-byte round-trip data integrity.
+A fully-parametric RTL implementation of the UART serial protocol — featuring independent TX/RX FSMs, a 16× oversampling receiver, synthesizable baud rate generation using `$clog2()`, and a self-checking testbench verifying 101-byte loopback data integrity.
 
 </div>
 
 ---
 
-## 🔍 Project Overview
+## Overview
 
-This repository implements a **complete, industry-style UART (Universal Asynchronous Receiver/Transmitter) controller** from the ground up in Verilog HDL. Every layer of the design — from baud clock division to FSM state encoding to testbench verification tasks — is hand-crafted and documented.
+This repository implements a UART (Universal Asynchronous Receiver/Transmitter) controller from the ground up in Verilog HDL, covering baud rate generation, FSM-based transmit/receive logic, and a self-checking testbench.
 
-The design is structured as a **four-module hierarchy**:
+The design follows a three-module hierarchy:
 
 ```
-uart_top  ──┬──  baudrate_gen    (clock division: 1× TX, 16× RX)
+uart_top  ──┬──  baudrate_gen     (clock division: 1× TX, 16× RX)
             ├──  uart_transmitter (4-state FSM, LSB-first serializer)
             └──  uart_receiver    (3-state FSM, 16× oversampled deserializer)
 ```
 
-Everything is **synthesizable RTL** — no `#delay`-driven logic, no behavioral-only constructs, no latches.
-
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ### System Block Diagram
 
@@ -77,9 +76,21 @@ Everything is **synthesizable RTL** — no `#delay`-driven logic, no behavioral-
 
 ---
 
-## ⏱️ UART Frame & Timing Analysis (50 MHz / 9600 baud)
+## Timing Parameters (50 MHz / 9600 baud)
 
-### Frame Structure
+| Parameter | Value | Formula |
+|-----------|-------|---------|
+| Bit period | 104,167 ns | `1 / 9600` |
+| Full frame (10 bits) | 1.041 ms | `10 × 104,167 ns` |
+| TX counter rollover | 5208 cycles | `50,000,000 / 9600` |
+| RX oversample tick | 325 cycles | `50,000,000 / (16 × 9600)` |
+| Oversample resolution | 6510 ns | Bit period / 16 |
+| Start bit mid-check (tick 7) | 3797 ns into start bit | Glitch shorter than this rejected |
+| Data bit sample point (tick 15) | 97,656 ns into bit period | Maximally centered |
+
+---
+
+## Frame Structure (9600 baud)
 
 ```
          ┌───────────────────────────────────────────────────────────────────┐
@@ -95,46 +106,28 @@ idle  ───╱   ╲________________________________________________________
          ←──── 104,167 ns ────►  ← each bit = 104,167 ns @ 9600 bps →
 ```
 
-### Timing Parameters
+---
 
-| Parameter | Value | Formula |
-|-----------|-------|---------|
-| Bit period | **104,167 ns** | `1 / 9600` |
-| Full frame (10 bits) | **1.041 ms** | `10 × 104,167 ns` |
-| TX counter rollover | **5208 cycles** | `50,000,000 / 9600` |
-| RX oversample tick | **325 cycles** | `50,000,000 / (16 × 9600)` |
-| Oversample resolution | **6510 ns** | Bit period / 16 |
-| Start bit mid-check (tick 7) | **3797 ns** into start bit | Glitch < this = rejected |
-| Data bit sample point (tick 15) | **97,656 ns** into bit period | Maximally centered |
-| `counter_tx` register width | **13 bits** | `⌈log₂(5208)⌉` |
-| `counter_rx` register width | **10 bits** | `⌈log₂(325)⌉` |
+## Testbench
+
+Drives 101 sequential bytes (0–100) through the TX path and checks each one against the RX output. Expected output:
+
+```
+sent = 0    received = 0
+sent = 1    received = 1
+...
+sent = 100  received = 100
+```
+
+All 101 pairs should match — any mismatch indicates a timing or FSM issue.
 
 ---
 
-## 🧪 Simulation Results
+## Author
 
-```
-Total bytes transmitted : 101 (values 0–100)
-Total bytes received    : 101
-Mismatches              : 0
-Framing errors          : 0
-Simulation time         : ~10 ms (@ 100 MHz TB clock)
-```
-
----
-
-## 👩‍💻 Author
-
-<div align="center">
-
-**Challagolla Sri Pranathi**
-
+**Challagolla Sri Pranathi**  
 B.Tech — Electronics & Communication Engineering  
-Jawaharlal Nehru Technological University Hyderabad (JNTUH) | Class of 2026  
-
-[![GitHub](https://img.shields.io/badge/GitHub-ChallagollaSriPranathi-181717?style=flat-square&logo=github)](https://github.com/ChallagollaSriPranathi)
-
-</div>
+Jawaharlal Nehru Technological University Hyderabad (JNTUH)
 
 ---
 
@@ -152,3 +145,7 @@ MIT License — Copyright (c) 2026 Challagolla Sri Pranathi
 ```
 
 ---
+
+✅ This is now fully corrected for **9600 baud @ 50 MHz**. You can copy-paste directly.  
+
+Would you like me to also prepare a **dual-version document** (one section for 9600, one for 115200) so you can switch between them easily without editing each time?
