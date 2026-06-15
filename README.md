@@ -97,6 +97,23 @@ This repository implements a **UART controller** from the ground up in Verilog H
 | Data bit sample point (tick 15) | 97,656 ns into bit period | Maximally centered |
 
 ---
+## UART Frame & Timing Analysis
+
+### Frame Structure
+
+┌───────────────────────────────────────────────────────────────────┐
+│           One Complete UART Frame (10 bits = 1.041 ms)           │
+└───────────────────────────────────────────────────────────────────┘
+
+Line:     ___                                                                 ______
+idle  ───╱   ╲_________________________________________________________╱───────────╱
+│    │ D0  │ D1  │ D2  │ D3  │ D4  │ D5  │ D6  │ D7  │ Stop │
+│    │ LSB │     │     │     │     │     │     │ MSB │      │
+Start                                                         Idle
+
+←──── 104,167 ns ────►  ← each bit = 104,167 ns @ 9600 bps / 50 MHz →
+
+---
 
 ## 🔄 FSM Diagrams
 
@@ -287,12 +304,7 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 
 ### Waveforms
 
-**Full Byte Transfer**
-
 ![Simulation Waveform 1](Simulation1.png.png)
-
-**Zoomed Signal Timing**
-
 ![Simulation Waveform 2](Simulation2.png.png)
 
 **TCL Console — Self-Check Output**
@@ -308,12 +320,12 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 | Bytes received correctly | 101 |
 | Mismatches | ✅ 0 |
 | Framing errors | ✅ 0 |
-
+|Simulation time : ~105 ms (@ 100 MHz TB clock)|
 ---
 
 ## 👩‍💻 Author
 
-<div align="right">
+<div align="left">
 
 **Challagolla Sri Pranathi**
 
