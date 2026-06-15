@@ -698,23 +698,9 @@ This project touches every major skill evaluated in FPGA/RTL fresher interviews:
 **Challagolla Sri Pranathi**
 
 B.Tech — Electronics & Communication Engineering
-Jawaharlal Nehru Technological University Hyderabad (JNTUH) | Class of 2026
-
-CGPA: 8.8 &nbsp;|&nbsp; GATE 2026 Qualified
-
-*Aspiring RTL Design Engineer · FPGA Developer · VLSI Enthusiast*
-
-[![GitHub](https://img.shields.io/badge/GitHub-ChallagollaSriPranathi-181717?style=flat-square&logo=github)](https://github.com/ChallagollaSriPranathi)
-
+Jawaharlal Nehru Technological University Hyderabad (JNTUH) 
 </div>
 
-### Other Projects
-
-| Project | Key Technologies | Highlights |
-|---------|-----------------|------------|
-| [16-Bit Multipliers & ALU Integration](https://github.com/ChallagollaSriPranathi/16Bit_Multipliers-Comparison_ALU-Integration) | Verilog, Vivado, Artix-7 | Booth Radix-2/4, Wallace Tree, Baugh-Wooley; synthesis comparison on xc7a35t |
-
----
 
 ## 📄 License
 
