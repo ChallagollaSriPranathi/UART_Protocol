@@ -13,7 +13,7 @@
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Project Overview](#-project-overview)
 2. [Architecture](#-architecture)
@@ -26,21 +26,21 @@
 
 ---
 
-## 🔍 Project Overview
+##  Project Overview
 
 This repository implements a **UART controller** from the ground up in Verilog HDL —  from baud clock division to FSM encoding to testbench verification.
 
 | Feature | Detail |
 |---------|--------|
-| 🔁 Dual FSMs | 4-state TX + 3-state RX, fully synchronous |
-| 📡 16× Oversampling | Mid-bit sampling with noise/glitch rejection |
-| ⚙️ Parametric Design | `CLK_FREQ` & `BAUD_RATE` tunable at instantiation |
-| 🧪 Self-Checking Testbench | 101-byte sequential loopback with `$display` pass/fail |
-| 🏭 Synthesizable RTL | No `#delay` logic, no latches, Xilinx FPGA-ready |
+|  Dual FSMs | 4-state TX + 3-state RX, fully synchronous |
+|  16× Oversampling | Mid-bit sampling with noise/glitch rejection |
+|  Parametric Design | `CLK_FREQ` & `BAUD_RATE` tunable at instantiation |
+|  Self-Checking Testbench | 101-byte sequential loopback with `$display` pass/fail |
+|  Synthesizable RTL | No `#delay` logic, no latches, Xilinx FPGA-ready |
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ### System Block Diagram
 
@@ -115,7 +115,7 @@ idle  ───╱   ╲___________________________________________╱───�
 
 ---
 
-## 🔄 FSM Diagrams
+##  FSM Diagrams
 
 ### Transmitter FSM — `uart_transmitter`
 
@@ -149,7 +149,7 @@ stateDiagram-v2
 
 ---
 
-## 📦 Modules
+##  Modules
 
 ### 1. `baudrate_gen` — Baud Rate Generator
 **File:** `BaudRate_Generator.v`
@@ -235,7 +235,7 @@ end
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 UART_Protocol/
@@ -257,7 +257,7 @@ UART_Protocol/
 
 ---
 
-## 🚀 Setup & Simulation
+##  Setup & Simulation
 
 ### Prerequisites
 
@@ -300,7 +300,7 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 
 ---
 
-## 🧪 Simulation Results
+##  Simulation Results
 
 ### Waveforms
 
@@ -323,7 +323,7 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 |Simulation time | ~105 ms (@ 50 MHz TB clock)|
 ---
 
-## 👩‍💻 Author
+##  Author
 
 <div align="left">
 
@@ -333,7 +333,7 @@ B.Tech — Electronics & Communication Engineering
 Jawaharlal Nehru Technological University Hyderabad (JNTUH) 
 
 ---
-## 📄 License
+##  License
 
 MIT License — Copyright © 2026 Challagolla Sri Pranathi. See [`LICENSE`](LICENSE) for full text.
 
