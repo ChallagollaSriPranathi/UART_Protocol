@@ -84,17 +84,19 @@ This repository implements a **UART controller** from the ground up in Verilog H
 
 ![Schematic](Schematic.png.png)
 
-### Timing at 50 MHz / 9600 baud
+---
 
-| Parameter | Value |
-|-----------|-------|
-| Bit period | 104167 ns |
-| Full frame (10 bits) | 1.041 ms |
-| TX counter divider (`DIV_TX`) | 5208 cycles |
-| RX oversample divider (`DIV_RX`) | 325 cycles |
-| Oversample resolution | 6510 ns per tick |
-| Glitch rejection threshold | < 3797 ns (tick 7 mid-check) |
-| Data sample point | tick 15 (true centre of bit) |
+## Timing Parameters (50 MHz / 9600 baud)
+
+| Parameter | Value | Formula |
+|-----------|-------|---------|
+| Bit period | 104,167 ns | `1 / 9600` |
+| Full frame (10 bits) | 1.041 ms | `10 × 104,167 ns` |
+| TX counter rollover | 5208 cycles | `50,000,000 / 9600` |
+| RX oversample tick | 325 cycles | `50,000,000 / (16 × 9600)` |
+| Oversample resolution | 6510 ns | Bit period / 16 |
+| Start bit mid-check (tick 7) | 3797 ns into start bit | Glitch shorter than this rejected |
+| Data bit sample point (tick 15) | 97,656 ns into bit period | Maximally centered |
 
 ---
 
