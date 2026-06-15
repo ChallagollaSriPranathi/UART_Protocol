@@ -8,13 +8,6 @@
 [![Clock](https://img.shields.io/badge/System%20Clock-50%20MHz-blue?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
 [![Verified](https://img.shields.io/badge/Verification-101%20Bytes%20Loopback-success?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)](LICENSE)
-
-<br/>
-
-> **A from-scratch, fully-parametric RTL implementation of the UART serial protocol** — featuring dual independent FSMs, a 16× oversampling receiver, synthesizable baud rate generation using `$clog2()`, and a self-checking testbench that verifies 101-byte round-trip data integrity.
-
-</div>
-
 ---
 
 ## Table of Contents
