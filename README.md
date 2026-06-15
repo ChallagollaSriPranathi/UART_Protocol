@@ -6,8 +6,6 @@
 
 [![Language](https://img.shields.io/badge/HDL-Verilog%20IEEE%201364--2005-1f6feb?style=for-the-badge&logo=v&logoColor=white)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 [![Tool](https://img.shields.io/badge/EDA-Xilinx%20Vivado-ff6600?style=for-the-badge)](https://www.xilinx.com/products/design-tools/vivado.html)
-[![Clock](https://img.shields.io/badge/System%20Clock-50%20MHz-blue?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
-[![Verified](https://img.shields.io/badge/Verified-101%20Bytes%20Loopback-success?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART_Protocol)
 
 > A complete UART controller built from scratch in Verilog HDL — dual FSMs, 16× oversampling, parametric baud generation, and a self-checking 101-byte loopback testbench. Zero mismatches.
 
