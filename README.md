@@ -46,38 +46,53 @@ This repository implements a **UART controller** from the ground up in Verilog H
 
 ## 🏗️ Architecture
 
+### System Block Diagram
+
 ```
-                    ┌──────────────────────────────────────────┐
-                    │                uart_top                  │
-                    │                                          │
-  data_in[7:0] ───►│──► uart_transmitter                      │
-  wr_en ──────────►│    [ IDLE → START → DATA → STOP ]        │
-  clk / rst ──────►│               │ tx_line                  │
-                    │    ┌──────────▼──────────┐               │
-                    │    │    baudrate_gen      │               │
-                    │    │  DIV_TX = 434 (1×)  │               │
-                    │    │  DIV_RX =  27 (16×) │               │
-                    │    └──────────┬──────────┘               │
-                    │               │ (loopback: tx→rx)        │
-                    │    uart_receiver ◄───────────────────────┘
-                    │    [ START_DETECT → DATA_CAPTURE → STOP_CHECK ]
-                    │               │
-  data_out[7:0] ◄──│───────────────┘
-  rdy / busy ◄─────│
-                    └──────────────────────────────────────────┘
+                              ┌──────────────────────────────────────────┐
+                              │               uart_top                   │
+                              │                                           │
+  data_in[7:0] ──────────────►│──────────────► uart_transmitter          │
+  wr_en ──────────────────────►│   data        ┌────────────────────┐    │
+  rst ────────────────────────►│   wr_enb      │  FSM: 4-state      │    │
+  clk ────────────────────────►│               │  IDLE→START→DATA   │    │
+                              │               │       →STOP         │    │
+                              │               │                    tx├──┐ │
+                              │               └────────────────────┘  │ │
+                              │                     ▲                  │ │
+                              │               enb_tx│              tx  │ │
+                              │               ┌─────┴──────────────┐  │ │
+                              │               │   baudrate_gen      │  │ │
+                              │               │  DIV_TX = 434       │  │ │
+                              │               │  DIV_RX = 27        │  │ │
+                              │               └─────┬──────────────┘  │ │
+                              │               enb_rx│                  │ │
+                              │                     ▼       loopback   │ │
+                              │               uart_receiver ◄──────────┘ │
+                              │               ┌────────────────────┐    │
+                              │               │  FSM: 3-state      │    │
+                              │               │  START→DATA→STOP   │    │
+                              │               │  16× oversampling  │    │
+                              │               └────────────────────┘    │
+                              │                    │                     │
+  data_out[7:0] ◄─────────────│────────────────────┘                    │
+  rdy ◄───────────────────────│                                          │
+  busy ◄──────────────────────│                                          │
+  rdy_clr ───────────────────►│                                          │
+                              └──────────────────────────────────────────┘
 ```
 
 ![Schematic](Schematic.png.png)
 
-### Timing at 50 MHz / 115200 baud
+### Timing at 50 MHz / 9600 baud
 
 | Parameter | Value |
 |-----------|-------|
-| Bit period | 8680 ns |
-| Full frame (10 bits) | 86.81 µs |
-| TX counter divider (`DIV_TX`) | 434 cycles |
-| RX oversample divider (`DIV_RX`) | 27 cycles |
-| Oversample resolution | 542 ns per tick |
+| Bit period | 104167 ns |
+| Full frame (10 bits) | 1.041 ms |
+| TX counter divider (`DIV_TX`) | 5208 cycles |
+| RX oversample divider (`DIV_RX`) | 325 cycles |
+| Oversample resolution | 6510 ns per tick |
 | Glitch rejection threshold | < 3797 ns (tick 7 mid-check) |
 | Data sample point | tick 15 (true centre of bit) |
 
@@ -129,11 +144,11 @@ Divides the system clock into two enable pulses:
 Counter widths are computed automatically using `$clog2()` — industry best practice that prevents truncation warnings when parameters change.
 
 ```verilog
-localparam integer DIV_TX = CLK_FREQ / BAUD_RATE;        // 434 @ 50 MHz
-localparam integer DIV_RX = CLK_FREQ / (16 * BAUD_RATE); //  27 @ 50 MHz
+localparam integer DIV_TX = CLK_FREQ / BAUD_RATE;        // 5208 @ 50 MHz
+localparam integer DIV_RX = CLK_FREQ / (16 * BAUD_RATE); //  325 @ 50 MHz
 
-reg [$clog2(DIV_TX)-1:0] counter_tx;  // 9-bit, self-sizing
-reg [$clog2(DIV_RX)-1:0] counter_rx;  // 5-bit, self-sizing
+reg [$clog2(DIV_TX)-1:0] counter_tx;  // 13-bit, self-sizing
+reg [$clog2(DIV_RX)-1:0] counter_rx;  // 10-bit, self-sizing
 ```
 
 **Parameters:** `CLK_FREQ` (default 100 MHz), `BAUD_RATE` (default 115200)
@@ -231,8 +246,8 @@ UART_Protocol/
 ├── UART_Testbench.v          ← Self-checking TB: 101-byte sequential loopback
 │
 ├── Schematic.png.png         ← Block diagram / schematic
-├── Simulation1.png.png       ← Waveform: full byte transfer view
-├── Simulation2.png.png       ← Waveform: zoomed signal timing
+├── Simulation1.png.png       ← Waveform: starting part
+├── Simulation2.png.png       ← Waveform: ending part
 ├── Tclconsole1.png           ← TCL console: sent vs. received log (part 1)
 ├── TclConsole2.png           ← TCL console: sent vs. received log (part 2)
 │
@@ -251,14 +266,8 @@ UART_Protocol/
 | Xilinx Vivado | 2019.1+ | Synthesis, simulation, implementation |
 | Git | Any | Clone the repository |
 
-### Step 1 — Clone
 
-```bash
-git clone https://github.com/ChallagollaSriPranathi/UART_Protocol.git
-cd UART_Protocol
-```
-
-### Step 2 — Create Vivado Project
+### Step 1 — Create Vivado Project
 
 1. Open Vivado → **Create Project** → RTL Project
 2. Add design sources: `BaudRate_Generator.v`, `UART_Transmitter.v`, `UART_Receiver.v`, `Top_Module.v`
@@ -266,7 +275,7 @@ cd UART_Protocol
 4. Target part: `xc7a35tcpg236-1` (Artix-7) or your own board
 5. Set `uart_top` as design top; `UART_Testbench` as simulation top
 
-### Step 3 — Run Behavioral Simulation
+### Step 2 — Run Behavioral Simulation
 
 ```
 Flow Navigator → Simulation → Run Behavioral Simulation
@@ -285,26 +294,6 @@ sent = 0    received = 0
 sent = 1    received = 1
 ...
 sent = 100  received = 100
-```
-
-### Step 4 — Synthesize & Implement
-
-```tcl
-launch_runs synth_1 -jobs 4
-wait_on_run synth_1
-launch_runs impl_1 -to_step write_bitstream -jobs 4
-wait_on_run impl_1
-```
-
-### Step 5 — Change Baud Rate or Clock
-
-Edit the `baudrate_gen` instantiation in `Top_Module.v`:
-
-```verilog
-baudrate_gen #(
-    .CLK_FREQ  (100_000_000),  // your board clock in Hz
-    .BAUD_RATE (9600)          // target baud rate
-) bg ( ... );
 ```
 
 Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 230400`
@@ -340,23 +329,6 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 
 ---
 
-## 🔮 Future Enhancements
-
-| Enhancement | Complexity |
-|-------------|-----------|
-| Parity bit (even / odd / none) via parameter | 🟢 Low |
-| Configurable data width (5 – 8 bits) | 🟢 Low |
-| 2-stop-bit support | 🟢 Low |
-| Framing / overrun error flags | 🟢 Low |
-| TX / RX FIFO buffers | 🟡 Medium |
-| Hardware flow control (RTS/CTS) | 🟡 Medium |
-| FPGA hardware demo via PuTTY / Tera Term | 🟡 Medium |
-| AXI4-Lite wrapper (SoC peripheral) | 🔴 High |
-| SystemVerilog UVM testbench | 🔴 High |
-| Baud auto-detection | 🔴 High |
-
----
-
 ## 👩‍💻 Author
 
 <div align="center">
@@ -364,31 +336,11 @@ Supported baud rates at 50 MHz: `9600 · 19200 · 38400 · 57600 · 115200 · 23
 **Challagolla Sri Pranathi**
 
 B.Tech — Electronics & Communication Engineering
-Jawaharlal Nehru Technological University Hyderabad (JNTUH) · Class of 2026
-CGPA: 8.8 &nbsp;|&nbsp; GATE 2026 Qualified
-
-*Aspiring RTL Design Engineer · FPGA Developer · VLSI Enthusiast*
-
-[![GitHub](https://img.shields.io/badge/GitHub-ChallagollaSriPranathi-181717?style=flat-square&logo=github)](https://github.com/ChallagollaSriPranathi)
-
-</div>
-
-### Other Projects
-
-| Project | Technologies | Highlights |
-|---------|-------------|------------|
-| [16-Bit Multipliers & ALU](https://github.com/ChallagollaSriPranathi/16Bit_Multipliers-Comparison_ALU-Integration) | Verilog, Vivado, Artix-7 | Booth Radix-2/4, Wallace Tree, Baugh-Wooley; synthesis comparison |
+Jawaharlal Nehru Technological University Hyderabad (JNTUH) 
 
 ---
-
 ## 📄 License
 
 MIT License — Copyright © 2026 Challagolla Sri Pranathi. See [`LICENSE`](LICENSE) for full text.
 
 ---
-
-<div align="center">
-
-*Designed from scratch in Verilog HDL · Verified in Xilinx Vivado · JNTUH ECE 2026*
-
-</div>
