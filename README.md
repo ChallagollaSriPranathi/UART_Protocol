@@ -2,8 +2,6 @@
 
 # UART Protocol — RTL Design & Verification
 
-### Full-Stack Serial Communication Controller in Synthesizable Verilog HDL
-
 [![Language](https://img.shields.io/badge/HDL-Verilog%20IEEE%201364--2005-1f6feb?style=for-the-badge&logo=v&logoColor=white)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
 [![Tool](https://img.shields.io/badge/EDA-Xilinx%20Vivado-ff6600?style=for-the-badge)](https://www.xilinx.com/products/design-tools/vivado.html)
 [![Baud Rate](https://img.shields.io/badge/Baud%20Rate-115200%20bps-brightgreen?style=for-the-badge)](https://github.com/ChallagollaSriPranathi/UART-Protocol)
