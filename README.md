@@ -99,19 +99,22 @@ This repository implements a **UART controller** from the ground up in Verilog H
 
 ### Frame Structure
 
-```
-         ┌───────────────────────────────────────────────────────────────────┐
-         │           One Complete UART Frame (10 bits = 1.041 ms)           │
-         └───────────────────────────────────────────────────────────────────┘
-
-Line:     ___                                                           ______
-idle  ───╱   ╲___________________________________________╱───────────╱
-          │    │ D0  │ D1  │ D2  │ D3  │ D4  │ D5  │ D6  │ D7  │ Stop │
-          │    │ LSB │     │     │     │     │     │     │ MSB │      │
-         Start                                                         Idle
-
-         ←──── 104167 ns ────►  ← each bit = 104167 ns @ 9600 bps / 50 MHz →
-```
+```mermaid
+gantt
+    title UART Frame (9600 baud @ 50 MHz)
+    dateFormat  x
+    axisFormat  %L ns
+    section Frame
+    Start bit        :active, 0, 104167
+    Data bit D0      : 104167, 104167
+    Data bit D1      : 208334, 104167
+    Data bit D2      : 312501, 104167
+    Data bit D3      : 416668, 104167
+    Data bit D4      : 520835, 104167
+    Data bit D5      : 625002, 104167
+    Data bit D6      : 729169, 104167
+    Data bit D7      : 833336, 104167
+    Stop bit         : 937503, 104167
 
 
 ---
