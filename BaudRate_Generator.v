@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 module baudrate_gen #(
-    parameter CLK_FREQ  = 100_000_000,   // system clock frequency (Hz)
+    parameter CLK_FREQ  = 100_000_000, 
     parameter BAUD_RATE = 115200 
 )(
     input  wire clock,
@@ -9,12 +9,8 @@ module baudrate_gen #(
     output reg  enb_tx,
     output reg  enb_rx
 );
-
-    // Divisors calculated from parameters
     localparam integer DIV_TX = CLK_FREQ / BAUD_RATE;
     localparam integer DIV_RX = CLK_FREQ / (16 * BAUD_RATE);
-
-    // Dynamic counter widths to prevent bit-width warnings
     reg [$clog2(DIV_TX)-1:0] counter_tx;
     reg [$clog2(DIV_RX)-1:0] counter_rx;
 
