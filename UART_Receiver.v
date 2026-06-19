@@ -5,7 +5,7 @@ module uart_receiver(
     input  wire       rst,
     input  wire       rx,
     input  wire       rdy_clr,
-    input  wire       clk_en,      // 16x oversampling enable
+    input  wire       clk_en,      
     output reg        rdy,
     output reg [7:0]  data_out
 );
@@ -36,7 +36,7 @@ module uart_receiver(
                 case(state)
                     start_state: begin
                         if(rx == 1'b0 || sample != 4'b0) begin
-                            if(sample == 4'h7) begin // Mid-point of start bit
+                            if(sample == 4'h7) begin 
                                 if(rx == 1'b0) begin
                                     state  <= data_state;
                                     sample <= 4'b0;
@@ -52,7 +52,7 @@ module uart_receiver(
                     end
 
                     data_state: begin
-                        if(sample == 4'hF) begin // Sample next bits mid-period
+                        if(sample == 4'hF) begin
                             sample               <= 4'b0;
                             temp_register[index] <= rx;
                             if(index == 3'h7) begin
@@ -69,7 +69,7 @@ module uart_receiver(
                         if(sample == 4'hF) begin
                             sample   <= 4'b0;
                             state    <= start_state;
-                            if(rx == 1'b1) begin // Valid stop bit checked
+                            if(rx == 1'b1) begin 
                                 data_out <= temp_register;
                                 rdy      <= 1'b1;
                             end
